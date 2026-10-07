@@ -23,6 +23,17 @@ No install needed. It works on desktop and phone, and your progress saves in the
 | Chair a **Go/No-Go** with a readiness checklist | Launches are decided by criteria agreed in advance, and phased rollouts shrink the blast radius |
 | Run a launch-day **incident** | Incident commander, comms cadence, rollback first, blameless post-mortem |
 
+### 🎧 Live mode: a day in the life
+
+A separate, immersive mode. You sit through a full Wednesday on Project Kaya on a virtual desktop: a standup that derails into live debugging, a sync-vs-async **architecture argument** where two senior engineers talk over each other, and a 2pm check-in where the VP asks "are we still good for 11.11?".
+
+- Meetings play as **video calls** with speaking indicators, crosstalk, reactions, screen-shares and live captions.
+- **Slack DMs and doc comments arrive mid-call.** Open them beside the meeting, because what you've read unlocks better things to say. If you never opened the DM with the vendor's rate limit, you can't bring it into the room.
+- When it's your turn you get a **countdown**, and staying silent is a choice too.
+- End the day by writing the **decision record** and the team update, then get a debrief: every moment graded, the signals you missed, and how accurate your record was.
+
+![Live mode: an architecture review with Slack open mid-call](docs/screenshots/live.webp)
+
 Every choice is graded the way a seasoned TPM would grade it (*Seasoned TPM move* / *Workable* / *Rookie mistake*), with a **mentor's take** explaining why. You can always see how the other options would have graded.
 
 ## Features
