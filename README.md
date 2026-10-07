@@ -4,6 +4,10 @@
 
 It's built for engineers and tech leads (especially those holding a PMP) who want to move into a TPM role and need to feel what the job actually is: triaging an inbox of real dilemmas, protecting the critical path, keeping a RAID log, writing honest RAG status reports, and chairing the Go/No-Go call.
 
+### ▶ [Play it in your browser](https://makoydev.github.io/project-manager-simulator/)
+
+No install needed. It works on desktop and phone, and your progress saves in the browser.
+
 ![Title screen: five MRT-style lines converge on a LAUNCH interchange](docs/screenshots/title.webp)
 
 ## What you'll learn by playing
@@ -51,7 +55,7 @@ npm run dev        # http://localhost:5173
 
 | Script | What it does |
 |---|---|
-| `npm run build` | Typecheck and build a static site into `dist/` (relative paths, so any static host works) |
+| `npm run build` | Typecheck and build a static site into `dist/` (relative paths, so any static host works). Every push to `main` deploys it to GitHub Pages |
 | `npm test` | Engine, content-validation and balance tests (Vitest) |
 | `npm run simulate` | Bots play 480 full programs and print the balance table |
 | `npm run lint` | oxlint |
