@@ -1,0 +1,337 @@
+@import 'tailwindcss';
+
+/*
+ * Layout concept: "Interchange" — the program is a Singapore MRT-style network.
+ * Workstreams are coloured lines that converge on the Launch terminal; the accent is NE-line purple.
+ * Every colour is a token: bare :root = light, both dark blocks redefine the same tokens.
+ */
+:root {
+  --bg: #eef1f6;
+  --bg-deep: #e2e7f0;
+  --surface: #ffffff;
+  --surface-2: #f6f8fb;
+  --surface-3: #ebeff6;
+  --ink: #111a2c;
+  --ink-2: #445168;
+  --muted: #6d7a93;
+  --line: #dde3ec;
+  --line-strong: #c3ccda;
+  --accent: #9900aa;
+  --accent-2: #7a0088;
+  --accent-ink: #ffffff;
+  --accent-soft: #f5e6f8;
+  --good: #0ca30c;
+  --good-ink: #087a0b;
+  --good-soft: #e2f4e2;
+  --warn: #fab219;
+  --warn-ink: #8a5800;
+  --warn-soft: #fff2d3;
+  --bad: #d03b3b;
+  --bad-ink: #a92828;
+  --bad-soft: #fbe4e4;
+  --ws-core: #1f6fd1;
+  --ws-client: #e8890c;
+  --ws-platform: #0f9aa8;
+  --ws-data: #9d5b25;
+  --ws-review: #c2457e;
+  --scrim: rgb(9 14 26 / 0.55);
+  --shadow-color: 222deg 40% 12%;
+  --sky-top: #7fb7f4;
+  --sky-bottom: #f7d9b5;
+  --skyline: #24304a;
+  --window: #ffd77a;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #0b1120;
+    --bg-deep: #070b16;
+    --surface: #141c2e;
+    --surface-2: #1a2438;
+    --surface-3: #222d45;
+    --ink: #e8edf6;
+    --ink-2: #b3bed1;
+    --muted: #8591aa;
+    --line: #26314a;
+    --line-strong: #36425e;
+    --accent: #d37be6;
+    --accent-2: #e6a3f3;
+    --accent-ink: #1b0820;
+    --accent-soft: #2d1d3b;
+    --good: #0ca30c;
+    --good-ink: #63d463;
+    --good-soft: #112a1b;
+    --warn: #fab219;
+    --warn-ink: #ffc94d;
+    --warn-soft: #2f2611;
+    --bad: #d03b3b;
+    --bad-ink: #ff8080;
+    --bad-soft: #361a20;
+    --ws-core: #4a90ea;
+    --ws-client: #cf7c15;
+    --ws-platform: #139aa6;
+    --ws-data: #bb7c44;
+    --ws-review: #dc5e97;
+    --scrim: rgb(2 4 10 / 0.72);
+    --shadow-color: 225deg 60% 2%;
+    --sky-top: #0b1530;
+    --sky-bottom: #3a2a52;
+    --skyline: #05080f;
+    --window: #ffcf5c;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #0b1120;
+  --bg-deep: #070b16;
+  --surface: #141c2e;
+  --surface-2: #1a2438;
+  --surface-3: #222d45;
+  --ink: #e8edf6;
+  --ink-2: #b3bed1;
+  --muted: #8591aa;
+  --line: #26314a;
+  --line-strong: #36425e;
+  --accent: #d37be6;
+  --accent-2: #e6a3f3;
+  --accent-ink: #1b0820;
+  --accent-soft: #2d1d3b;
+  --good: #0ca30c;
+  --good-ink: #63d463;
+  --good-soft: #112a1b;
+  --warn: #fab219;
+  --warn-ink: #ffc94d;
+  --warn-soft: #2f2611;
+  --bad: #d03b3b;
+  --bad-ink: #ff8080;
+  --bad-soft: #361a20;
+  --ws-core: #4a90ea;
+  --ws-client: #cf7c15;
+  --ws-platform: #139aa6;
+  --ws-data: #bb7c44;
+  --ws-review: #dc5e97;
+  --scrim: rgb(2 4 10 / 0.72);
+  --shadow-color: 225deg 60% 2%;
+  --sky-top: #0b1530;
+  --sky-bottom: #3a2a52;
+  --skyline: #05080f;
+  --window: #ffcf5c;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-deep: var(--bg-deep);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-good: var(--good);
+  --color-good-ink: var(--good-ink);
+  --color-good-soft: var(--good-soft);
+  --color-warn: var(--warn);
+  --color-warn-ink: var(--warn-ink);
+  --color-warn-soft: var(--warn-soft);
+  --color-bad: var(--bad);
+  --color-bad-ink: var(--bad-ink);
+  --color-bad-soft: var(--bad-soft);
+  --color-ws-core: var(--ws-core);
+  --color-ws-client: var(--ws-client);
+  --color-ws-platform: var(--ws-platform);
+  --color-ws-data: var(--ws-data);
+  --color-ws-review: var(--ws-review);
+  --font-display: 'Unbounded', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --shadow-card: 0 1px 1px hsl(var(--shadow-color) / 0.06), 0 2px 4px hsl(var(--shadow-color) / 0.06), 0 8px 18px -8px hsl(var(--shadow-color) / 0.16);
+  --shadow-pop: 0 2px 6px hsl(var(--shadow-color) / 0.1), 0 24px 60px -20px hsl(var(--shadow-color) / 0.45);
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  ::selection {
+    background: var(--accent-soft);
+  }
+}
+
+@layer components {
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Thin, quiet scrollbars inside panels */
+  .scroll-y {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+
+  /* Moving stripes on in-progress lines */
+  .stripes {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgb(255 255 255 / 0.28) 0 6px,
+      transparent 6px 12px
+    );
+    background-size: 17px 17px;
+    animation: stripes 0.9s linear infinite;
+  }
+
+  @keyframes stripes {
+    to {
+      background-position: 17px 0;
+    }
+  }
+
+  .pulse-ring {
+    animation: pulse-ring 1.6s ease-out infinite;
+  }
+
+  @keyframes pulse-ring {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--bad) 55%, transparent);
+    }
+    100% {
+      box-shadow: 0 0 0 10px transparent;
+    }
+  }
+
+  .shine {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shine::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.45) 50%, transparent 65%);
+    transform: translateX(-100%);
+    animation: shine 2.4s ease-in-out infinite;
+  }
+
+  @keyframes shine {
+    60%,
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .twinkle {
+    animation: twinkle 2.8s ease-in-out infinite;
+  }
+
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 0.25;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  .dash-flow {
+    stroke-dasharray: 6 6;
+    animation: dash-flow 1.2s linear infinite;
+  }
+
+  @keyframes dash-flow {
+    to {
+      stroke-dashoffset: -12;
+    }
+  }
+
+  .wiggle {
+    animation: wiggle 0.5s ease-in-out;
+  }
+
+  @keyframes wiggle {
+    0%,
+    100% {
+      transform: rotate(0);
+    }
+    25% {
+      transform: rotate(-12deg);
+    }
+    75% {
+      transform: rotate(12deg);
+    }
+  }
+
+  .blink {
+    animation: blink 1s steps(2, start) infinite;
+  }
+
+  @keyframes blink {
+    to {
+      visibility: hidden;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stripes,
+  .pulse-ring,
+  .shine::after,
+  .twinkle,
+  .dash-flow,
+  .wiggle,
+  .blink {
+    animation: none !important;
+  }
+}
