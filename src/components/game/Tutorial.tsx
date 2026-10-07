@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { getScenario } from '../../game/content'
-import { useLayoutEffect, useState } from 'react'
+import { useLayoutEffect, useMemo, useState } from 'react'
 import { useGame } from '../../store/game'
 import { useMeta } from '../../store/meta'
 import { Button } from '../ui/Button'
@@ -42,15 +42,28 @@ function steps(player: string, program: string): Step[] {
   ]
 }
 
-function visibleRect(sel?: string): DOMRect | null {
+interface Box {
+  left: number
+  top: number
+  width: number
+  height: number
+  right: number
+  bottom: number
+}
+
+function visibleRect(sel?: string): Box | null {
   if (!sel) return null
   const els = Array.from(document.querySelectorAll<HTMLElement>(`[data-tour="${sel}"]`))
   for (const el of els) {
     const r = el.getBoundingClientRect()
-    if (r.width > 0 && r.height > 0 && el.offsetParent !== null) return r
+    if (r.width > 0 && r.height > 0 && el.offsetParent !== null)
+      return { left: r.left, top: r.top, width: r.width, height: r.height, right: r.right, bottom: r.bottom }
   }
   return null
 }
+
+const sameBox = (a: Box | null, b: Box | null) =>
+  a === b || (!!a && !!b && a.left === b.left && a.top === b.top && a.width === b.width && a.height === b.height)
 
 export function Tutorial() {
   const done = useMeta((s) => s.tutorialDone)
@@ -58,18 +71,26 @@ export function Tutorial() {
   const game = useGame((s) => s.game)
   const modal = useGame((s) => s.modal)
   const [i, setI] = useState(0)
-  const [rect, setRect] = useState<DOMRect | null>(null)
-  const list = steps(game?.playerName ?? 'there', game ? getScenario(game.scenarioId).program : '')
+  const [rect, setRect] = useState<Box | null>(null)
+  const player = game?.playerName ?? 'there'
+  const program = game ? getScenario(game.scenarioId).program : ''
+  const list = useMemo(() => steps(player, program), [player, program])
   const step = list[i]
+  const target = step.target
   const active = !done && game?.day === 1 && !modal
 
+  // Measure the spotlight target. Keyed on the target *string*, and state only changes when the
+  // box actually moves; otherwise every render would re-measure and re-render forever.
   useLayoutEffect(() => {
     if (!active) return
-    const update = () => setRect(visibleRect(step.target))
+    const update = () => {
+      const next = visibleRect(target)
+      setRect((prev) => (sameBox(prev, next) ? prev : next))
+    }
     update()
     window.addEventListener('resize', update)
     return () => window.removeEventListener('resize', update)
-  }, [active, step])
+  }, [active, target])
 
   if (!active || !game) return null
   const pad = 8
