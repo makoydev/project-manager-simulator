@@ -27,16 +27,19 @@ Every choice is graded the way a seasoned TPM would grade it (*Seasoned TPM move
 
 ## Features
 
-- **3 programs**, each harder than the last:
+- **6 programs**, ordered by difficulty:
   - ⭐ **ShiokPay Later** at *Shiok*, a fictional super-app at one-north. Launch buy-now-pay-later before the 11.11 sale.
   - ⭐⭐ **Project Durian** at *Kampong Labs*, a fictional global tech company's APAC hub. Migrate 40 services to a new auth platform across Singapore, Shenzhen, Bangalore and Seattle, with influence but no authority.
+  - ⭐⭐ **Tamarind**, a benefits platform with a Singapore engineering hub. Launch new spending accounts and claims automation for 20+ employers before the January 1 plan year, with a lean team on a big inherited codebase, AI-assisted delivery and North American time zones.
+  - ⭐⭐ **Orchid Digital Bank**. Roll out governed AI coding tools to 250 engineers through an LLM gateway: human-in-the-loop, PII redaction, prompt injection, a shadow → opt-in → default rollout, and productivity you can actually prove.
   - ⭐⭐⭐ **Project Merlion** at *Lion City Bank*. Inherit a red "watermelon" program three weeks before cutover: an SI vendor, CAB approval, UAT, VAPT and MAS technology-risk expectations.
-- **98 events, 321 graded choices**, with consequence chains: a cheap "yes" in a hallway comes back as scope creep three days later.
+  - ⭐⭐⭐ **Alpenrose Private Bank**, from the vendor's side. Deliver a relationship-manager app redesign for a Zurich private bank from a Singapore delivery centre: SOW assumptions, change requests, client-identifying-data rules and RM adoption.
+- **146 events, 509 graded choices**, with consequence chains: a cheap "yes" in a hallway comes back as scope creep three days later.
 - **Three player backgrounds**, including *The Hybrid (Tech Lead + PMP)*, each with its own perks and temptations.
-- **Field Guide**: 34 concepts (RAID, RACI, critical path, Brooks's law, MAS TRM, PDPA…), each with in-practice tips, the ex–tech-lead trap, a "from your PMP" bridge, Singapore context and an interview drill.
+- **Field Guide**: 37 concepts (RAID, RACI, critical path, Brooks's law, MAS TRM, PDPA, AI-assisted delivery, AI governance…), each with in-practice tips, the ex–tech-lead trap, a "from your PMP" bridge, Singapore context and an interview drill.
 - **Career Kit**: what a TPM does all week, TPM vs TL vs EM vs PM, the Singapore market and its title zoo, CV rewrites, the interview loop decoded, a 30-60-90 plan, a 4-week practice plan and office Singlish.
-- **Interview Arcade**: 48 TPM interview questions in timed rounds with combos, lives, a practice mode and explanations.
-- 26 achievements, an end-of-program **performance review** (with bonus months and AWS 🧧), a skills radar and a slip chart.
+- **Interview Arcade**: 56 TPM interview questions (including AI delivery) in timed rounds with combos, lives, a practice mode and explanations.
+- 29 achievements, an end-of-program **performance review** (with bonus months and AWS 🧧), a skills radar and a slip chart.
 - Micro-animations throughout, synthesized sound effects, light and dark themes, phone layout, keyboard shortcuts, and `prefers-reduced-motion` support.
 
 | | |
@@ -57,7 +60,7 @@ npm run dev        # http://localhost:5173
 |---|---|
 | `npm run build` | Typecheck and build a static site into `dist/` (relative paths, so any static host works). Every push to `main` deploys it to GitHub Pages |
 | `npm test` | Engine, content-validation and balance tests (Vitest) |
-| `npm run simulate` | Bots play 480 full programs and print the balance table |
+| `npm run simulate` | Bots play 960 full programs and print the balance table |
 | `npm run lint` | oxlint |
 
 Progress, the Field Guide and achievements are saved in `localStorage`. The game still works if storage is blocked.
@@ -73,7 +76,10 @@ Progress, the Field Guide and achievements are saved in `localStorage`. The game
   |---|---|---|---|---|
   | ShiokPay Later ⭐ | 98 | 76 | 57 | 16 |
   | Project Durian ⭐⭐ | 99 | 74 | 52 | 16 |
+  | Tamarind ⭐⭐ | 98 | 77 | 53 | 14 |
+  | Orchid Digital Bank ⭐⭐ | 99 | 78 | 54 | 15 |
   | Project Merlion ⭐⭐⭐ | 92 | 66 | 40 | 15 |
+  | Alpenrose (vendor side) ⭐⭐⭐ | 98 | 71 | 43 | 15 |
 
 ```
 src/

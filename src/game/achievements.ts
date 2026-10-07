@@ -1,5 +1,5 @@
 import { BACKGROUNDS } from './backgrounds'
-import { getScenario } from './content'
+import { getScenario, SCENARIOS } from './content'
 import type { FinalScore } from './scoring'
 import type { GameState, ScenarioId } from './types'
 
@@ -35,8 +35,11 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: 'inbox-zero', name: 'Inbox Zero Hero', icon: '📭', description: 'Finish a program without letting a single message expire.' },
   { id: 'fired', name: 'Thank You for Your Contribution', icon: '📦', description: 'Get replaced as TPM. It happens to the best of us.', shame: true },
   { id: 'grade-s', name: 'Outstanding', icon: '🏆', description: 'Earn an S rating in your performance review.' },
-  { id: 'bank-survivor', name: 'Merlion Tamer', icon: '🦁', description: 'Launch the hardest program: Lion City Bank.' },
-  { id: 'regional', name: 'Regional Head Material', icon: '🌏', description: 'Launch all three programs.' },
+  { id: 'bank-survivor', name: 'Merlion Tamer', icon: '🦁', description: 'Launch Project Merlion at Lion City Bank.' },
+  { id: 'open-season', name: 'Open Enrollment Hero', icon: '🩺', description: 'Launch Tamarind’s spending accounts before the plan year starts.' },
+  { id: 'client-whisperer', name: 'Client Whisperer', icon: '🏔️', description: 'Launch for Alpenrose Private Bank as the vendor.' },
+  { id: 'human-in-the-loop', name: 'Human in the Loop', icon: '🧑‍⚖️', description: 'Roll out governed AI tools at Orchid Digital Bank.' },
+  { id: 'regional', name: 'Regional Head Material', icon: '🌏', description: 'Launch every program.' },
   { id: 'scholar', name: 'Walking PMBOK', icon: '📚', description: 'Unlock every Field Guide entry.' },
   { id: 'interview-ready', name: 'Offer Letter', icon: '✉️', description: 'Score 8+ correct in one Interview Arcade round.' },
 ]
@@ -79,7 +82,9 @@ export function endAchievements(s: GameState, score: FinalScore, completed: Scen
   if (s.meters.trust >= 85) out.push('trusted')
   if (s.counters.ignored === 0) out.push('inbox-zero')
   if (score.grade === 'S') out.push('grade-s')
-  if (s.scenarioId === 'lioncity') out.push('bank-survivor')
-  if ((['shiokpay', 'kampong', 'lioncity'] as ScenarioId[]).every((id) => completed.includes(id))) out.push('regional')
+  const launched: Partial<Record<ScenarioId, string>> = { lioncity: 'bank-survivor', tamarind: 'open-season', alpenrose: 'client-whisperer', orchid: 'human-in-the-loop' }
+  const named = launched[s.scenarioId]
+  if (named) out.push(named)
+  if (SCENARIOS.every((sc) => completed.includes(sc.id))) out.push('regional')
   return out
 }

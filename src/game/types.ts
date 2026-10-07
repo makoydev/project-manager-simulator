@@ -7,7 +7,7 @@
 
 // ───────────────────────────── Primitive unions ─────────────────────────────
 
-export type ScenarioId = 'shiokpay' | 'kampong' | 'lioncity'
+export type ScenarioId = 'shiokpay' | 'kampong' | 'lioncity' | 'tamarind' | 'alpenrose' | 'orchid'
 
 /** Player origin story. Changes starting relationships, perks and temptations. */
 export type BackgroundId = 'builder' | 'planner' | 'hybrid'
@@ -102,6 +102,9 @@ export type ConceptId =
   | 'decision-log'
   | 'negotiation'
   | 'self-care'
+  | 'ai-delivery'
+  | 'ai-governance'
+  | 'client-delivery'
 
 // ───────────────────────────── Effects & conditions ─────────────────────────────
 
@@ -279,7 +282,7 @@ export interface WorkstreamDef {
 export type RiskStatus = 'dormant' | 'hidden' | 'open' | 'mitigated' | 'occurred'
 
 export interface RiskDef {
-  /** Scenario-prefixed id, e.g. 'sp-risk-bank-sandbox'. */
+  /** Scenario-prefixed id, e.g. 'sp-risk-bank-sandbox' (prefixes: see prefixOf in validate.ts). */
   id: string
   /** ≤ 40 chars. */
   title: string

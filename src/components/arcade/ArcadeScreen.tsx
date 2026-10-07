@@ -15,7 +15,7 @@ import { SettingsControls } from '../ui/Settings'
 const ROUND = 10
 const LIVES = 3
 const SECONDS = 30
-const CATS: InterviewCategory[] = ['Behavioral', 'Program Sense', 'Technical Depth', 'Stakeholders', 'Execution', 'Singapore']
+const CATS: InterviewCategory[] = ['Behavioral', 'Program Sense', 'Technical Depth', 'Stakeholders', 'Execution', 'Singapore', 'AI Delivery']
 const LETTERS = ['A', 'B', 'C', 'D']
 
 interface Dealt {
