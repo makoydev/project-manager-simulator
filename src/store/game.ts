@@ -11,7 +11,7 @@ import { play } from '../lib/sfx'
 import { load, remove, save } from '../lib/storage'
 import { useMeta } from './meta'
 
-export type Screen = 'title' | 'setup' | 'game' | 'ending' | 'guide' | 'arcade'
+export type Screen = 'title' | 'setup' | 'game' | 'ending' | 'guide' | 'arcade' | 'live'
 
 export type Modal =
   | { kind: 'event'; uid: string; eventId: string; result?: ChoiceResult }
@@ -113,7 +113,7 @@ export const useGame = create<GameStore>((set, get) => {
     guide: { tab: 'concepts' },
     back: 'title',
 
-    go: (screen) => set({ screen, back: get().screen === 'guide' || get().screen === 'arcade' ? get().back : get().screen }),
+    go: (screen) => set({ screen, back: get().screen === 'guide' || get().screen === 'arcade' || get().screen === 'live' ? get().back : get().screen }),
     openGuide: (tab = 'concepts', concept) =>
       set({ screen: 'guide', guide: { tab, concept }, back: get().screen === 'guide' ? get().back : get().screen, modal: null }),
 

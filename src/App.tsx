@@ -1,4 +1,5 @@
 import { AnimatePresence, motion, MotionConfig } from 'motion/react'
+import { lazy, Suspense } from 'react'
 import { ArcadeScreen } from './components/arcade/ArcadeScreen'
 import { EndingScreen } from './components/ending/EndingScreen'
 import { ErrorBoundary } from './components/ErrorBoundary'
@@ -8,6 +9,9 @@ import { SetupScreen } from './components/setup/SetupScreen'
 import { TitleScreen } from './components/title/TitleScreen'
 import { Toasts } from './components/ui/Toasts'
 import { useGame, type Screen } from './store/game'
+
+// Live mode is a separate, heavier experience: load it only when someone opens it.
+const LiveScreen = lazy(() => import('./components/live/LiveScreen').then((m) => ({ default: m.LiveScreen })))
 
 export default function App() {
   const screen = useGame((s) => s.screen)
@@ -38,6 +42,11 @@ function Screens({ screen }: { screen: Screen }) {
         {screen === 'ending' && <EndingScreen />}
         {screen === 'guide' && <GuideScreen />}
         {screen === 'arcade' && <ArcadeScreen />}
+        {screen === 'live' && (
+          <Suspense fallback={<div className="grid h-full place-items-center text-[13px] text-muted">Booting Shiok OS…</div>}>
+            <LiveScreen />
+          </Suspense>
+        )}
       </motion.div>
     </AnimatePresence>
   )

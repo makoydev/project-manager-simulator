@@ -40,6 +40,12 @@
   --sky-bottom: #f7d9b5;
   --skyline: #24304a;
   --window: #ffd77a;
+  /* The video-call stage is dark in both themes, like real call apps. */
+  --call-bg: #0d121d;
+  --call-tile: #182031;
+  --call-ink: #e9eef7;
+  --call-muted: #93a0b8;
+  --call-line: #263049;
   color-scheme: light;
 }
 
@@ -150,6 +156,11 @@
   --color-ws-platform: var(--ws-platform);
   --color-ws-data: var(--ws-data);
   --color-ws-review: var(--ws-review);
+  --color-call-bg: var(--call-bg);
+  --color-call-tile: var(--call-tile);
+  --color-call-ink: var(--call-ink);
+  --color-call-muted: var(--call-muted);
+  --color-call-line: var(--call-line);
   --font-display: 'Unbounded', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -313,6 +324,29 @@
     }
   }
 
+  .eq > span {
+    display: inline-block;
+    width: 3px;
+    border-radius: 2px;
+    background: currentColor;
+    animation: eq 0.9s ease-in-out infinite;
+  }
+  .eq > span:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  .eq > span:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  @keyframes eq {
+    0%,
+    100% {
+      height: 4px;
+    }
+    50% {
+      height: 12px;
+    }
+  }
+
   .blink {
     animation: blink 1s steps(2, start) infinite;
   }
@@ -331,7 +365,8 @@
   .twinkle,
   .dash-flow,
   .wiggle,
-  .blink {
+  .blink,
+  .eq > span {
     animation: none !important;
   }
 }

@@ -126,6 +126,27 @@ export function TitleScreen() {
                 </Button>
               )}
             </motion.div>
+            <motion.button
+              type="button"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.75 }}
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => go('live')}
+              className="mt-4 flex w-full max-w-md items-center gap-3 rounded-2xl border border-line bg-surface p-3 text-left shadow-[var(--shadow-card)] transition-colors hover:border-accent"
+            >
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-call-bg text-[22px]" aria-hidden>
+                🎧
+              </span>
+              <span className="min-w-0">
+                <span className="flex items-center gap-2 text-[14px] font-bold">
+                  Live: a day in the life
+                  <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-bold tracking-wide text-accent-ink uppercase">New · immersive</span>
+                </span>
+                <span className="block text-[12.5px] text-ink-2">Sit in the meetings. Read the room, check Slack mid-call, and walk out with a decision.</span>
+              </span>
+            </motion.button>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} className="mt-3 flex flex-wrap gap-2">
               <Button variant="ghost" onClick={() => openGuide('concepts')}>
                 📖 Field Guide
