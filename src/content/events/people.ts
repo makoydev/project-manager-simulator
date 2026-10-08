@@ -949,7 +949,7 @@ export const PEOPLE_EVENTS: EventDef[] = [
     title: 'Found out from a town hall slide',
     channel: 'email',
     from: 'compliance',
-    body: 'Dear {player}, I learned from a town hall slide that {product} launches on Day {target}. Nobody consulted my team on the customer data flows. Until we have reviewed them, I cannot sign off. Earlier involvement would have been appreciated.',
+    body: 'Dear {player}, I learned from a town hall slide that {product} launches on {target}. Nobody consulted my team on the customer data flows. Until we have reviewed them, I cannot sign off. Earlier involvement would have been appreciated.',
     urgency: 'high',
     when: { minDay: 4, maxDay: 13 },
     concept: 'raci',

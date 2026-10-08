@@ -1,13 +1,16 @@
 import { DELIVERY_EVENTS } from '../content/events/delivery'
 import { PEOPLE_EVENTS } from '../content/events/people'
 import { SYSTEM_EVENTS } from '../content/events/system'
+import { ALPENROSE } from '../content/scenarios/alpenrose'
 import { KAMPONG } from '../content/scenarios/kampong'
 import { LIONCITY } from '../content/scenarios/lioncity'
+import { ORCHID } from '../content/scenarios/orchid'
 import { SHIOKPAY } from '../content/scenarios/shiokpay'
+import { TAMARIND } from '../content/scenarios/tamarind'
 import type { EventDef, RiskDef, ScenarioDef, ScenarioId } from './types'
 
 /** Ordered by difficulty — the setup screen lists them in this order. */
-export const SCENARIOS: ScenarioDef[] = [SHIOKPAY, KAMPONG, LIONCITY]
+export const SCENARIOS: ScenarioDef[] = [SHIOKPAY, KAMPONG, TAMARIND, ORCHID, LIONCITY, ALPENROSE]
 export const GENERIC_EVENTS: EventDef[] = [...PEOPLE_EVENTS, ...DELIVERY_EVENTS, ...SYSTEM_EVENTS]
 
 const scenarios = new Map<ScenarioId, ScenarioDef>()

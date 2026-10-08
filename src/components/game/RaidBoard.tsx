@@ -41,12 +41,14 @@ function RiskMatrix({ risks, onPick }: { risks: RiskDef[]; onPick: (id: string) 
             [1, 2, 3, 4, 5].map((i) => {
               const here = risks.filter((r) => r.likelihood === l && r.impact === i)
               const b = band(l * i)
+              // Shrink dots in crowded cells so they wrap two per row instead of spilling out.
+              const dot = here.length >= 3 ? 'h-[18px] w-[18px] text-[9px]' : here.length === 2 ? 'h-5 w-5 text-[10px]' : 'h-6 w-6 text-[11px]'
               return (
                 <div
                   key={`${l}-${i}`}
                   role="gridcell"
                   aria-label={`Likelihood ${LIKELIHOOD[l - 1]}, impact ${IMPACT[i - 1]}: ${here.length} risks`}
-                  className="relative flex aspect-[1.35] flex-wrap content-center items-center justify-center gap-1 rounded-md p-1"
+                  className="relative flex aspect-[1.35] flex-wrap content-center items-center justify-center gap-0.5 rounded-md p-0.5"
                   style={{ background: b.bg }}
                 >
                   {here.map((r) => {
@@ -65,7 +67,7 @@ function RiskMatrix({ risks, onPick }: { risks: RiskDef[]; onPick: (id: string) 
                         onFocus={() => setHover(r.id)}
                         onBlur={() => setHover(null)}
                         aria-label={`${r.title}: ${st.label}`}
-                        className={cx('grid h-6 w-6 place-items-center rounded-full text-[11px] font-bold ring-2 ring-[var(--surface)]', st.cls)}
+                        className={cx('grid place-items-center rounded-full font-bold ring-2 ring-[var(--surface)]', dot, st.cls)}
                       >
                         {st.glyph}
                       </motion.button>

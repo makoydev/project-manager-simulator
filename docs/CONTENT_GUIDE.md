@@ -103,7 +103,7 @@ Use tokens instead of hard-coded names in **generic** events (scenario events ma
 ## 5. Flags, follow-ups & chains
 
 * Flags are kebab-case strings. **Namespace them by file**: `p:` people events, `d:` delivery
-  events, `sp:` / `kl:` / `lc:` scenario events. E.g. `p:said-yes-to-feature`.
+  events, `sp:` / `kl:` / `lc:` / `tm:` / `ar:` / `od:` scenario events. E.g. `p:said-yes-to-feature`.
 * Engine-owned flags you may *read* in conditions (never set them):
   `sys:watermelon` (player reported better than reality), `sys:escalated`, `sys:coded`
   (player wrote code themselves), `sys:rebaselined`, `sys:contractor`, `sys:no-go`.
@@ -122,7 +122,7 @@ A scenario (`ScenarioDef`) needs:
 * **Workstreams:** exactly one per `WsRole`. Tune `work`/`velocity`/`done`/`deps` so that at neutral
   performance the projected launch is: difficulty 1 → Day 14–15; difficulty 2 → Day 15–16;
   difficulty 3 → Day 16–17 (the player must act to recover). Typical velocities 4–9 points/day.
-* **Risks:** 5–9, ids prefixed with the scenario prefix (`sp-`, `kl-`, `lc-`). Mix initial states:
+* **Risks:** 5–9, ids prefixed with the scenario prefix (`sp-`, `kl-`, `lc-`, `tm-`, `ar-`, `od-`; see `prefixOf` in `validate.ts`). Mix initial states:
   ~2 `open`, ~3–4 `hidden`, 0–2 `dormant` (brought in by events via `addRisks`). Each has a
   mitigation (cost 1–3 ⚡) and a `trigger` event (weight 0) in the same scenario.
 * **Events:** 12–16, all ids prefixed and `scenarios: ['<id>']`:

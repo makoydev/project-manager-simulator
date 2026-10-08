@@ -27,6 +27,6 @@ describe('interview arcade questions', () => {
   })
   it('covers every category', () => {
     const cats = new Set(INTERVIEW_QUESTIONS.map((q) => q.category))
-    expect(cats.size).toBe(6)
+    expect(cats.size).toBe(7)
   })
 })

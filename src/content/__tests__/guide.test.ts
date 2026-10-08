@@ -8,7 +8,7 @@ const ALL: ConceptId[] = [
   'escalation', 'critical-path', 'scope-creep', 'iron-triangle', 'estimation', 'brooks-law', 'risk-mgmt',
   'incident-mgmt', 'postmortem', 'launch-readiness', 'phased-rollout', 'tech-debt', 'agile-ceremonies', 'meetings',
   'team-health', 'tl-trap', 'vendor-mgmt', 'change-mgmt', 'mas-trm', 'pdpa', 'cross-timezone', 'uat', 'metrics',
-  'decision-log', 'negotiation', 'self-care',
+  'decision-log', 'negotiation', 'self-care', 'ai-delivery', 'ai-governance', 'client-delivery',
 ]
 
 describe('field guide', () => {

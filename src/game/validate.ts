@@ -26,6 +26,8 @@ function checkTokens(where: string, text: string, errors: string[]) {
   for (const m of text.matchAll(TOKEN_RE)) {
     if (!VALID_TOKEN.test(m[1])) errors.push(`${where}: unknown token {${m[1]}}`)
   }
+  // {target} and {day} already render as "Day 15"; writing "Day {target}" shows "Day Day 15".
+  if (/\bday\s+\{(?:target|day)\}/i.test(text)) errors.push(`${where}: "Day {target}" renders as "Day Day N"; use {target} alone`)
 }
 
 function checkLen(where: string, text: string | undefined, max: number, errors: string[]) {
@@ -185,7 +187,7 @@ function checkRisk(r: RiskDef, s: ScenarioDef, eventIds: Set<string>, errors: st
 }
 
 export function prefixOf(s: ScenarioDef): string {
-  return { shiokpay: 'sp-', kampong: 'kl-', lioncity: 'lc-' }[s.id]
+  return { shiokpay: 'sp-', kampong: 'kl-', lioncity: 'lc-', tamarind: 'tm-', alpenrose: 'ar-', orchid: 'od-' }[s.id]
 }
 
 function hasCycle(s: ScenarioDef): boolean {

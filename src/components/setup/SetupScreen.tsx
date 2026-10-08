@@ -57,6 +57,7 @@ export function SetupScreen() {
   const go = useGame((s) => s.go)
   const startGame = useGame((s) => s.startGame)
   const best = useMeta((s) => s.best)
+  const runs = useMeta((s) => s.runs)
   const [step, setStep] = useState(0)
   const [name, setName] = useState('')
   const [nudge, setNudge] = useState(0)
@@ -165,7 +166,7 @@ export function SetupScreen() {
               <div>
                 <h1 className="font-display text-[clamp(26px,4vw,38px)] font-bold tracking-tight">Pick your program</h1>
                 <p className="mt-2 max-w-2xl text-ink-2">
-                  Each is three working weeks to launch. Start with the first one if you’re new to the role, since each program is harder than the one before.
+                  Each is three working weeks to launch. They’re ordered by difficulty, so if you’re new to the role, start at the top.
                 </p>
                 <div className="mt-6 grid gap-3 md:grid-cols-3" role="radiogroup" aria-label="Program">
                   {SCENARIOS.map((s, i) => (
@@ -192,7 +193,12 @@ export function SetupScreen() {
                         <Stars n={s.difficulty} />
                       </span>
                       <span className="flex flex-1 flex-col px-5 pt-3 pb-5">
-                        <span className="eyebrow">{s.company}</span>
+                        <span className="flex items-center gap-2">
+                          <span className="eyebrow">{s.company}</span>
+                          {runs > 0 && !best[s.id] && (
+                            <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-bold tracking-wide text-accent-ink uppercase">New</span>
+                          )}
+                        </span>
                         <span className="mt-1 font-display text-[18px] leading-tight font-bold">{s.program}</span>
                         <span className="text-[13px] font-semibold text-accent">{s.name}</span>
                         <span className="mt-2 text-[14px] leading-snug text-ink-2">{s.tagline}</span>

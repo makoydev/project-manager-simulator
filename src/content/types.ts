@@ -40,7 +40,7 @@ export interface CareerSection {
   blocks: CareerBlock[]
 }
 
-export type InterviewCategory = 'Behavioral' | 'Program Sense' | 'Technical Depth' | 'Stakeholders' | 'Execution' | 'Singapore'
+export type InterviewCategory = 'Behavioral' | 'Program Sense' | 'Technical Depth' | 'Stakeholders' | 'Execution' | 'Singapore' | 'AI Delivery'
 
 /** Mock-interview arcade question: pick the strongest answer. */
 export interface InterviewQuestion {
