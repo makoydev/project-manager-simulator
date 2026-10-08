@@ -1,9 +1,10 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { fmtClock, meetingAt, nameOf, optionLocked } from '../../live/engine'
 import type { LiveEpisode, LivePerson } from '../../live/types'
 import type { LiveApi } from '../../live/useLive'
 import { cx } from '../../lib/cx'
+import { gallery } from '../../lib/gallery'
 import { play } from '../../lib/sfx'
 import { Kbd, Typewriter } from '../ui/bits'
 import { DashChart } from './apps/DashApp'
@@ -162,7 +163,7 @@ function ChoicePanel({ live }: { live: LiveApi }) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 30, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 320, damping: 30 }}
-          className="absolute inset-x-2 bottom-2 z-20 rounded-2xl border border-call-line bg-call-bg p-3 shadow-2xl sm:inset-x-4 sm:bottom-4 sm:p-4"
+          className="scroll-y absolute inset-x-2 bottom-2 z-20 max-h-[calc(100%-1rem)] rounded-2xl border border-call-line bg-call-bg p-3 shadow-2xl sm:inset-x-4 sm:bottom-4 sm:max-h-[calc(100%-2rem)] sm:p-4"
           role="dialog"
           aria-label="Your turn to speak"
         >
@@ -224,13 +225,31 @@ function ChoicePanel({ live }: { live: LiveApi }) {
   )
 }
 
+/** An element's client size (keep it padding-free), kept current with a ResizeObserver. Pass the setter as a callback ref. */
+function useSize<T extends HTMLElement>() {
+  const [el, setEl] = useState<T | null>(null)
+  const [size, setSize] = useState({ w: 0, h: 0 })
+  useLayoutEffect(() => {
+    if (!el) return
+    const measure = () => setSize({ w: el.clientWidth, h: el.clientHeight })
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [el])
+  return [setEl, size] as const
+}
+
 export function CallView({ ep, live, reactions }: { ep: LiveEpisode; live: LiveApi; reactions: Reaction[] }) {
+  const [gridRef, box] = useSize<HTMLDivElement>()
   const s = live.state
   const m = meetingAt(ep, s)
   if (!m) return null
   const people = s.present.map((id) => ep.people.find((p) => p.id === id)).filter(Boolean) as LivePerson[]
   const n = people.length + 1
-  const cols = n <= 2 ? 'grid-cols-1 sm:grid-cols-2' : n <= 4 ? 'grid-cols-2' : n <= 6 ? 'grid-cols-2 lg:grid-cols-3' : 'grid-cols-3 lg:grid-cols-4'
+  // Fit every tile in the stage at 16:9; fixed breakpoint columns overflowed onto the controls in short windows.
+  const gap = box.w < 600 ? 8 : 12
+  const fit = gallery(n, box.w, box.h, gap)
   const share = s.sharing
   const doc = share?.app === 'doc' ? ep.docs.find((d) => d.id === share.id) : undefined
   const dash = share?.app === 'dash' ? ep.dashboards.find((d) => d.id === share.id) : undefined
@@ -267,10 +286,16 @@ export function CallView({ ep, live, reactions }: { ep: LiveEpisode; live: LiveA
               {doc && <DocView ep={ep} doc={doc} comments={s.comments} compact />}
               {dash && <DashChart p={dash} />}
             </motion.div>
-            <div className="grid shrink-0 grid-cols-4 gap-2 lg:w-44 lg:grid-cols-1 lg:content-start lg:overflow-y-auto">{tiles(true)}</div>
+            <div className="grid shrink-0 auto-rows-max grid-cols-4 gap-2 lg:w-44 lg:grid-cols-1 lg:content-start lg:overflow-y-auto">{tiles(true)}</div>
           </div>
         ) : (
-          <div className={cx('mx-auto grid h-full max-w-5xl content-center gap-2 sm:gap-3', cols)}>{tiles(false)}</div>
+          <div
+            ref={gridRef}
+            className="mx-auto grid h-full max-w-5xl content-center justify-center"
+            style={box.w ? { gap, gridTemplateColumns: `repeat(${fit.cols}, ${Math.max(48, Math.floor(fit.tile))}px)` } : undefined}
+          >
+            {tiles(false)}
+          </div>
         )}
         <Captions ep={ep} live={live} />
         <ChoicePanel live={live} />

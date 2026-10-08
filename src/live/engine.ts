@@ -136,6 +136,7 @@ export function initLive(ep: LiveEpisode): LiveState {
 
 /** Lock screen → desk time before the first meeting. */
 export function startDay(prev: LiveState, ep: LiveEpisode): LiveState {
+  if (prev.phase !== 'lock') return prev
   const s = structuredClone(prev)
   s.phase = 'desk'
   s.messages.push(...(ep.meetings[0]?.deskBefore ?? []).filter((id) => !s.messages.includes(id)))

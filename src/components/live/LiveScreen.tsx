@@ -37,49 +37,68 @@ interface Notice {
 
 function LockScreen({ ep, live }: { ep: LiveEpisode; live: LiveApi }) {
   const previews = ep.messages.filter((m) => m.at === 'morning').slice(-3).reverse()
+  const start = live.startDay
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      // A focused button handles Enter itself; don't unlock twice.
+      if (e.key !== 'Enter' || e.repeat || (e.target instanceof Element && e.target.closest('button, a, input, textarea'))) return
+      play('ping')
+      start()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [start])
+  // Centred when it fits. On short windows it scrolls and the unlock button sticks to the bottom, so it is always reachable.
   return (
-    <div
-      className="relative flex h-full flex-col items-center justify-center overflow-hidden p-6 text-white"
-      style={{ background: 'radial-gradient(120% 80% at 20% 10%, #3a1d5c 0%, #0d121d 55%, #071018 100%)' }}
-    >
-      <motion.p initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-[15px] font-semibold opacity-80">
-        {ep.dayLabel}
-      </motion.p>
-      <motion.p initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="font-display text-[clamp(64px,12vw,120px)] leading-none font-bold">
-        9:15
-      </motion.p>
-      <div className="mt-6 w-full max-w-md space-y-2">
-        {previews.map((m, i) => {
-          const p = ep.people.find((x) => x.id === m.from)
-          return (
-            <motion.div
-              key={m.id}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 + i * 0.15 }}
-              className="flex items-start gap-2.5 rounded-2xl bg-white/12 p-3 backdrop-blur"
-            >
-              {p && <Avatar c={p} size={32} />}
-              <div className="min-w-0 text-[13px]">
-                <p className="font-bold">
-                  💬 {p?.short ?? m.from} <span className="font-normal opacity-60">· Slack</span>
-                </p>
-                <p className="line-clamp-2 opacity-90">{m.text}</p>
-              </div>
-            </motion.div>
-          )
-        })}
+    <div className="scroll-y relative h-full text-white" style={{ background: 'radial-gradient(120% 80% at 20% 10%, #3a1d5c 0%, #0d121d 55%, #071018 100%)' }}>
+      <div className="flex min-h-full flex-col items-center justify-center px-6 pt-6">
+        <motion.p initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-[15px] font-semibold opacity-80">
+          {ep.dayLabel}
+        </motion.p>
+        <motion.p
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="font-display text-[clamp(52px,min(12vw,13vh),120px)] leading-none font-bold"
+        >
+          9:15
+        </motion.p>
+        <div className="mt-6 w-full max-w-md space-y-2">
+          {previews.map((m, i) => {
+            const p = ep.people.find((x) => x.id === m.from)
+            return (
+              <motion.div
+                key={m.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 + i * 0.15 }}
+                className="flex items-start gap-2.5 rounded-2xl bg-white/12 p-3 backdrop-blur"
+              >
+                {p && <Avatar c={p} size={32} />}
+                <div className="min-w-0 text-[13px]">
+                  <p className="font-bold">
+                    💬 {p?.short ?? m.from} <span className="font-normal opacity-60">· Slack</span>
+                  </p>
+                  <p className="line-clamp-2 opacity-90">{m.text}</p>
+                </div>
+              </motion.div>
+            )
+          })}
+        </div>
+        <div className="mt-6 max-w-md space-y-2 text-center text-[14px] leading-relaxed opacity-85">
+          {ep.intro.map((p, i) => (
+            <p key={i}>{p}</p>
+          ))}
+        </div>
+        <div className="sticky bottom-0 -mx-6 flex flex-col items-center gap-1.5 self-stretch px-6 pt-8 pb-5">
+          <div aria-hidden className="absolute inset-0 -z-10 bg-[#071018] [mask-image:linear-gradient(to_top,black_55%,transparent)]" />
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
+            <Button variant="primary" size="lg" sound="ping" className="shine" onClick={start}>
+              Open your laptop →
+            </Button>
+          </motion.div>
+          <p className="text-[11.5px] opacity-60">or press Enter</p>
+        </div>
       </div>
-      <div className="mt-6 max-w-md space-y-2 text-center text-[14px] leading-relaxed opacity-85">
-        {ep.intro.map((p, i) => (
-          <p key={i}>{p}</p>
-        ))}
-      </div>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }} className="mt-6">
-        <Button variant="primary" size="lg" sound="ping" className="shine" onClick={live.startDay}>
-          Open your laptop →
-        </Button>
-      </motion.div>
     </div>
   )
 }
@@ -90,47 +109,56 @@ function DeskView({ ep, live, openApp }: { ep: LiveEpisode; live: LiveApi; openA
   if (!m) return null
   const prev = ep.meetings[s.meetingIndex - 1]
   const minutes = Math.max(1, Math.round(toClock(m.start) - s.clock))
+  // Centred when it fits, scrollable (without clipping the top) when it doesn't.
   return (
-    <div className="scroll-y flex h-full items-center justify-center p-4" style={{ background: 'radial-gradient(100% 70% at 80% 0%, var(--accent-soft), var(--bg) 60%)' }}>
-      <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-lg rounded-3xl border border-line bg-surface p-5 shadow-[var(--shadow-pop)] sm:p-6">
-        {prev && s.outcomes[prev.id] && (
-          <p className="mb-4 rounded-xl bg-surface-2 px-3 py-2 text-[12.5px] text-ink-2">
-            <b>{prev.title}</b> ended: {s.outcomes[prev.id]}
+    <div className="scroll-y h-full" style={{ background: 'radial-gradient(100% 70% at 80% 0%, var(--accent-soft), var(--bg) 60%)' }}>
+      <div className="flex min-h-full items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full max-w-lg rounded-3xl border border-line bg-surface p-5 shadow-[var(--shadow-pop)] sm:p-6"
+        >
+          {prev && s.outcomes[prev.id] && (
+            <p className="mb-4 rounded-xl bg-surface-2 px-3 py-2 text-[12.5px] text-ink-2">
+              <b>{prev.title}</b> ended: {s.outcomes[prev.id]}
+            </p>
+          )}
+          <p className="eyebrow">Up next · in {minutes} min</p>
+          <h2 className="mt-1 font-display text-[20px] leading-tight font-bold">{m.title}</h2>
+          <p className="text-[13px] text-muted">
+            {fmtClock(toClock(m.start))} · {m.minutes} min · video call
           </p>
-        )}
-        <p className="eyebrow">Up next · in {minutes} min</p>
-        <h2 className="mt-1 font-display text-[20px] leading-tight font-bold">{m.title}</h2>
-        <p className="text-[13px] text-muted">{fmtClock(toClock(m.start))} · {m.minutes} min · video call</p>
-        <ul className="mt-3 list-disc space-y-0.5 pl-5 text-[13.5px] text-ink-2">
-          {m.agenda.map((a) => (
-            <li key={a}>{a}</li>
-          ))}
-        </ul>
-        <div className="mt-3 flex -space-x-2">
-          {m.attendees.map((id) => {
-            const p = ep.people.find((x) => x.id === id)
-            return p ? <Avatar key={id} c={p} size={30} className="ring-2 ring-[var(--surface)]" /> : null
-          })}
-        </div>
-        <div className="mt-4 rounded-xl border border-dashed border-line-strong p-3 text-[12.5px] text-ink-2">
-          <b className="text-ink">Desk time.</b> The best TPMs walk in prepared. Skim{' '}
-          <button type="button" className="font-semibold text-accent underline-offset-2 hover:underline" onClick={() => openApp('slack')}>
-            Slack
-          </button>
-          , the{' '}
-          <button type="button" className="font-semibold text-accent underline-offset-2 hover:underline" onClick={() => openApp('docs')}>
-            RFC
-          </button>{' '}
-          and the{' '}
-          <button type="button" className="font-semibold text-accent underline-offset-2 hover:underline" onClick={() => openApp('dash')}>
-            dashboards
-          </button>
-          , or join early.
-        </div>
-        <Button variant="primary" size="lg" className="mt-5 w-full" sound="whoosh" onClick={live.join}>
-          🎥 Join call
-        </Button>
-      </motion.div>
+          <ul className="mt-3 list-disc space-y-0.5 pl-5 text-[13.5px] text-ink-2">
+            {m.agenda.map((a) => (
+              <li key={a}>{a}</li>
+            ))}
+          </ul>
+          <div className="mt-3 flex -space-x-2">
+            {m.attendees.map((id) => {
+              const p = ep.people.find((x) => x.id === id)
+              return p ? <Avatar key={id} c={p} size={30} className="ring-2 ring-[var(--surface)]" /> : null
+            })}
+          </div>
+          <div className="mt-4 rounded-xl border border-dashed border-line-strong p-3 text-[12.5px] text-ink-2">
+            <b className="text-ink">Desk time.</b> The best TPMs walk in prepared. Skim{' '}
+            <button type="button" className="font-semibold text-accent underline-offset-2 hover:underline" onClick={() => openApp('slack')}>
+              Slack
+            </button>
+            , the{' '}
+            <button type="button" className="font-semibold text-accent underline-offset-2 hover:underline" onClick={() => openApp('docs')}>
+              RFC
+            </button>{' '}
+            and the{' '}
+            <button type="button" className="font-semibold text-accent underline-offset-2 hover:underline" onClick={() => openApp('dash')}>
+              dashboards
+            </button>
+            , or join early.
+          </div>
+          <Button variant="primary" size="lg" className="mt-5 w-full" sound="whoosh" onClick={live.join}>
+            🎥 Join call
+          </Button>
+        </motion.div>
+      </div>
     </div>
   )
 }
@@ -187,8 +215,8 @@ function MeetingEnded({ ep, live }: { ep: LiveEpisode; live: LiveApi }) {
   const m = meetingAt(ep, s)
   if (s.phase !== 'meetingEnd' || !m) return null
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0 z-30 grid place-items-center bg-[var(--scrim)] p-4">
-      <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} className="w-full max-w-md rounded-3xl border border-line bg-surface p-5 text-ink shadow-[var(--shadow-pop)]">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="scroll-y absolute inset-0 z-30 flex bg-[var(--scrim)] p-4">
+      <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} className="m-auto w-full max-w-md rounded-3xl border border-line bg-surface p-5 text-ink shadow-[var(--shadow-pop)]">
         <p className="eyebrow">Call ended · {fmtClock(s.clock)}</p>
         <h3 className="mt-1 font-display text-[18px] font-bold">{m.title}</h3>
         <p className="mt-2 text-[14px] leading-relaxed text-ink-2">{s.outcomes[m.id]}</p>
@@ -223,11 +251,13 @@ export function LiveScreen() {
           const m = ep.messages.find((x) => x.id === e.id)
           const p = m && ep.people.find((x) => x.id === m.from)
           if (!m) return
+          if (open === 'slack' && channel === m.channel) return play('ping') // already on screen
           setNotices((n) => [...n.slice(-2), { id, app: 'slack', icon: p?.avatar ?? '💬', title: `${p?.short ?? m.from} · Slack`, text: m.text, channel: m.channel }])
         } else {
           const c = ep.docs.flatMap((d) => d.comments).find((x) => x.id === e.id)
           const p = c && ep.people.find((x) => x.id === c.who)
           if (!c) return
+          if (open === 'docs') return play('ping') // already on screen
           setNotices((n) => [...n.slice(-2), { id, app: 'docs', icon: p?.avatar ?? '📄', title: `${p?.short ?? c.who} commented on the RFC`, text: c.text }])
         }
         setBounce((b) => ({ ...b, [e.app]: (b[e.app] ?? 0) + 1 }))
@@ -236,7 +266,7 @@ export function LiveScreen() {
       } else if (e.type === 'join') play('click')
       else if (e.type === 'end') play('stamp')
     },
-    [ep],
+    [ep, open, channel],
   )
   const live = useLive(ep, onEvent)
   const s = live.state
@@ -375,7 +405,14 @@ export function LiveScreen() {
       )}
 
       {/* Notification banners */}
-      <ol className="pointer-events-none fixed top-11 right-3 z-[60] flex w-[min(340px,calc(100%-24px))] flex-col gap-2" aria-live="polite">
+      <ol
+        className={cx(
+          'pointer-events-none fixed right-3 z-[60] flex w-[min(340px,calc(100%-24px))] flex-col gap-2',
+          // With an app open, sit beside it on wide screens and below its header on narrow ones.
+          open ? 'top-[88px] lg:top-11 lg:right-[452px]' : 'top-11',
+        )}
+        aria-live="polite"
+      >
         <AnimatePresence initial={false}>
           {notices.map((n) => (
             <motion.li

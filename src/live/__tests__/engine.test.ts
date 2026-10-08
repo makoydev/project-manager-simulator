@@ -52,6 +52,14 @@ describe('live engine', () => {
     })
   }
 
+  it('unlocking only acts on the lock screen, so a double unlock is harmless', () => {
+    const desk = startDay(initLive(EP), EP)
+    expect(desk.phase).toBe('desk')
+    expect(startDay(desk, EP)).toBe(desk)
+    const inCall = joinMeeting(desk, EP)
+    expect(startDay(inCall, EP)).toBe(inCall)
+  })
+
   it('reading key items sets read flags', () => {
     let s = startDay(initLive(EP), EP)
     const key = EP.messages.find((m) => m.key && m.at === 'morning')
